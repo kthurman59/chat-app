@@ -17,6 +17,10 @@ class ChatController extends Controller
         // Trigger the ChatMessage event with sender's name and message content
         event(new ChatMessage($request->user()->name, $request->message));
 
+        // Broadcast the message to others
+        broadcast(new MessageSent($message))->toOthers();
+
+
         // Return a response indicating the message was sent
         return response()->json(['message' => 'Message sent']);
     }
