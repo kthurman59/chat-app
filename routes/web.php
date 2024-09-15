@@ -17,4 +17,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/chat', [ChatController::class, 'index'])->middleware('auth');
+Route:post('/chat/send', [ChatController::class, 'send'])->middleware('auth');
+
 require __DIR__.'/auth.php';
