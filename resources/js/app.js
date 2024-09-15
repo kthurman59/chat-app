@@ -47,3 +47,12 @@ document.getElementById('sendmessage').addEventListener('click', function (e) {
         console.error('Error sending message:', error)
     });
 });
+
+
+Echo.channel('chat.' + roomId)
+    .listen('MessageSent', (e) => {
+        const chatWindow = document.getElementById('chat-window');
+        const messageElements = document.createElement('div');
+        messageElement.textContent = `${e.message.sender}: ${e.message.text}`;
+        chatWindow.appendChild(messageElement);
+    });
