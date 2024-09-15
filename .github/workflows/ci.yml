@@ -1,0 +1,48 @@
+name: Laravel CI 
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_database
+          MYSQL_ALLOW_EMPTY_PASSWORDS: true
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+          
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.0
+  
+    - name: Install Composer Dependancies
+      run: Composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Copy .env.example .env
+      run: cp .env.example .env
+
+    - name: Generate Laravel Application Key
+      run: php artisan key:generate
+
+    - name: Run Migrations
+      run: php artisan migrate
+
+    - name: Run Tests
+      run: php artisan test
+
