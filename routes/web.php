@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('chat');
 });
 
 Route::get('/dashboard', function () {
@@ -17,12 +18,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/chat', [ChatController::class, 'index'])->middleware('auth');
-Route::post('/chat/send', [ChatController::class, 'send'])->middleware('auth');
+Route::middleware('auth')->group(function () {
+    Route::get('/chat', [ChatController::class, 'index'])->middleware('auth');
+    Route::post('/chat/send', [ChatController::class, 'send'])->middleware('auth');
+    Route::post('/send-message', [ChatController::class, 'sendMessage']);
+});
 
-Route::post('/send-message', [ChatController::class, 'sendMessage']);
-
-Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-            ->name('logout');
+Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 require __DIR__.'/auth.php';
