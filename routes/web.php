@@ -18,6 +18,11 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/chat', [ChatController::class, 'index'])->middleware('auth');
-Route:post('/chat/send', [ChatController::class, 'send'])->middleware('auth');
+Route::post('/chat/send', [ChatController::class, 'send'])->middleware('auth');
+
+Route::post('/send-message', [ChatController::class, 'sendMessage']);
+
+Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+            ->name('logout');
 
 require __DIR__.'/auth.php';
